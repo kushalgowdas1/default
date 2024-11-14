@@ -1,0 +1,107 @@
+@Data
+@Document(collection="emp")
+@NoArgsConstructor
+@AllArgsConstructor
+
+public class enityy {
+
+	@Id
+	private int id;
+	
+	private String name;
+	
+	private String age;
+	
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getAge() {
+		return age;
+	}
+
+	public void setAge(String age) {
+		this.age = age;
+	}
+
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
+
+	private String address;
+}
+
+
+
+@RestController
+public class contell {
+
+	@Autowired
+	private repo obj;
+	
+	@GetMapping("/get")
+	public List<enityy> get(){
+		return obj.findAll();
+	}
+	
+	@PostMapping("/post")
+	public String post(@RequestBody enityy E) {
+		obj.save(E);
+		return "inserted";
+	}
+	
+	@PutMapping("/put/{id}")
+	public String put(@PathVariable int id, @RequestBody enityy B) {
+		enityy put = obj.findById(id).orElse(null);
+		if(put != null) {
+			put.setId(B.getId());
+			put.setName(B.getName());
+			put.setAge(B.getAge());
+			put.setAddress(B.getAddress());
+			
+			obj.save(put);
+			return "Updated";
+			}
+		else {
+			return "Not Null";
+		}
+	}
+	
+	
+	@DeleteMapping("/del/{id}")
+	public String del(@PathVariable int id) {
+		if(obj.existsById(id)){
+			obj.deleteById(id);
+			
+			return "Deleted";
+			
+		}else {
+			return "Not Found";
+		}
+	}
+	
+}
+
+
+
+
+
+spring.data.mongodb.port=27017
+spring.data.mongodb.host=localhost
+spring.data.mongodb.database=cpc
